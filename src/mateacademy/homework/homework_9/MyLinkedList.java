@@ -38,29 +38,7 @@ public class MyLinkedList<T> implements List<T> {
         }
         size++;
     }
-
-    @Override
-    public void add(T value, int index) {
-        if (indexOutOfBounds(index)) {
-            size++;
-            buffer = head;
-            if (index == 0) {
-                currentNode = new Node<>(null, value, head);
-                head = currentNode;
-            }
-            if (index == size() - 1) {
-                currentNode = new Node<>(tail, value, null);
-                tail = currentNode;
-            }
-            for (int i = 1; i < size - 1; i++) {
-
-                if (i == index) {
-                }
-                //buffer = this.buffer.next;
-            }
-        }
-    }
-
+    
     public int size() {
         return size;
     }
