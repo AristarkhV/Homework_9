@@ -86,6 +86,17 @@ public class MyLinkedList<T> implements List<T> {
         return buffer.item;
     }
 
+    @Override
+    public void set(T value, int index) {
+        buffer = head;
+        for (int i = 0; i < size - 1; i++) {
+            if (i == index) {
+                buffer.item = value;
+            }
+            buffer = buffer.next;
+        }
+    }
+
     public int size() {
         return size;
     }
@@ -99,10 +110,6 @@ public class MyLinkedList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (this.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size() == 0;
     }
 }
