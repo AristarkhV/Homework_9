@@ -8,21 +8,11 @@ public class MyLinkedList<T> implements List<T> {
     private Node<T> buffer;
     private int size;
 
-    public MyLinkedList() {
-    }
-
-    public Node<T> getHead() {
-        return head;
-    }
-
-    public Node<T> getTail() {
-        return tail;
-    }
 
     @Override
     public T get(int index) {
         if (indexOutOfBounds(index)) {
-            buffer = getHead();
+            buffer = head;
             for (int i = 0; i < size; i++) {
                 if (i == index) {
                     return buffer.item;
@@ -30,7 +20,7 @@ public class MyLinkedList<T> implements List<T> {
                 buffer = this.buffer.next;
             }
         }
-        return null;
+        throw new ArrayIndexOutOfBoundsException("INVALID INDEX");
     }
 
     @Override
@@ -47,6 +37,28 @@ public class MyLinkedList<T> implements List<T> {
             currentNode = buffer;
         }
         size++;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (indexOutOfBounds(index)) {
+            size++;
+            buffer = head;
+            if (index == 0) {
+                currentNode = new Node<>(null, value, head);
+                head = currentNode;
+            }
+            if (index == size() - 1) {
+                currentNode = new Node<>(tail, value, null);
+                tail = currentNode;
+            }
+            for (int i = 1; i < size - 1; i++) {
+
+                if (i == index) {
+                }
+                //buffer = this.buffer.next;
+            }
+        }
     }
 
     public int size() {
