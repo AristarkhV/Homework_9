@@ -9,14 +9,14 @@ public interface List<T> {
     boolean isEmpty();
 
     int size();
-/*
+
     void add(T value, int index);
 
+    T remove(int index);
+/*
     void addAll(List<T> list);
 
     void set(T value, int index);
-
-    T remove(int index);
 
     T remove(T t);
     */

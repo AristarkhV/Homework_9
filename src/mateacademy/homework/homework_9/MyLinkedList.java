@@ -8,7 +8,6 @@ public class MyLinkedList<T> implements List<T> {
     private Node<T> buffer;
     private int size;
 
-
     @Override
     public T get(int index) {
         if (indexOutOfBounds(index)) {
@@ -38,7 +37,55 @@ public class MyLinkedList<T> implements List<T> {
         }
         size++;
     }
-    
+
+    @Override
+    public void add(T value, int index) {
+        if (indexOutOfBounds(index)) {
+            if (index == 0) {
+                currentNode = new Node<>(null, value, head);
+                head = currentNode;
+            }
+            if (index == size() - 1) {
+                currentNode = new Node<>(tail, value, null);
+                tail = currentNode;
+            }
+            size++;
+            buffer = head;
+            for (int i = 1; i < size - 1; i++) {
+                if (i == index) {
+                    currentNode = new Node<>(buffer.prev, value, buffer.next);
+                    buffer.prev.next = currentNode;
+                    buffer.prev = currentNode;
+                }
+                buffer = buffer.next;
+            }
+        }
+    }
+
+    @Override
+    public T remove(int index) {
+        if (indexOutOfBounds(index)) {
+            if (index == 0) {
+                head = head.next;
+                head.next.prev = null;
+            }
+            if (index == (size() - 1)) {
+                tail = tail.prev;
+                tail.prev.next = null;
+            }
+            size--;
+            buffer = head;
+            for (int i = 1; i < size - 1; i++) {
+                if (i == index) {
+                    buffer.next = buffer.next.next;
+                    buffer.next.next.prev = buffer;
+                }
+                buffer = buffer.next;
+            }
+        }
+        return buffer.item;
+    }
+
     public int size() {
         return size;
     }
