@@ -15,9 +15,8 @@ public interface List<T> {
     T remove(int index);
 
     void set(T value, int index);
-/*
+
     T remove(T t);
 
     void addAll(List<T> list);
-    */
 }

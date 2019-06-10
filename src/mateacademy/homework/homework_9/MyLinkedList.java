@@ -1,5 +1,7 @@
 package mateacademy.homework.homework_9;
 
+import java.util.NoSuchElementException;
+
 public class MyLinkedList<T> implements List<T> {
 
     private Node<T> head;
@@ -12,14 +14,14 @@ public class MyLinkedList<T> implements List<T> {
     public T get(int index) {
         if (indexOutOfBounds(index)) {
             buffer = head;
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size(); i++) {
                 if (i == index) {
                     return buffer.item;
                 }
-                buffer = this.buffer.next;
+                buffer = buffer.next;
             }
         }
-        throw new ArrayIndexOutOfBoundsException("INVALID INDEX");
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -29,11 +31,9 @@ public class MyLinkedList<T> implements List<T> {
             head = currentNode;
             tail = currentNode;
         } else {
-            buffer = new Node<>(tail, value, null);
-            currentNode.next = buffer;
-            currentNode.prev = tail;
-            tail = buffer;
-            currentNode = buffer;
+            currentNode = new Node<>(tail, value, null);
+            currentNode.prev.next = currentNode;
+            tail = currentNode;
         }
         size++;
     }
@@ -49,7 +49,6 @@ public class MyLinkedList<T> implements List<T> {
                 currentNode = new Node<>(tail, value, null);
                 tail = currentNode;
             }
-            size++;
             buffer = head;
             for (int i = 1; i < size - 1; i++) {
                 if (i == index) {
@@ -63,27 +62,50 @@ public class MyLinkedList<T> implements List<T> {
     }
 
     @Override
+    public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
+
+    @Override
     public T remove(int index) {
         if (indexOutOfBounds(index)) {
+            size--;
             if (index == 0) {
                 head = head.next;
                 head.next.prev = null;
+                return head.item;
             }
-            if (index == (size() - 1)) {
+            if (index == (size())) {
                 tail = tail.prev;
                 tail.prev.next = null;
+                return tail.item;
             }
-            size--;
             buffer = head;
-            for (int i = 1; i < size - 1; i++) {
+            for (int i = 0; i < size(); i++) {
                 if (i == index) {
-                    buffer.next = buffer.next.next;
-                    buffer.next.next.prev = buffer;
+                    buffer.next.prev = buffer.prev;
+                    buffer.prev.next = buffer.next;
+                    return buffer.item;
                 }
                 buffer = buffer.next;
             }
         }
-        return buffer.item;
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public T remove(T t) {
+        buffer = head;
+        for (int i = 0; i < size(); i++) {
+            if (buffer.item.equals(t)) {
+                remove(i);
+                return buffer.item;
+            }
+            buffer = buffer.next;
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
