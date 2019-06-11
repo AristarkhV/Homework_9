@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements List<T> {
 
-    private Node<T> head;
-    private Node<T> tail;
+    private Node<T> firstNode;
+    private Node<T> lastNode;
     private Node<T> currentNode;
     private Node<T> buffer;
     private int size;
@@ -13,12 +13,12 @@ public class MyLinkedList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (indexOutOfBounds(index)) {
-            buffer = head;
+            currentNode = firstNode;
             for (int i = 0; i < size(); i++) {
                 if (i == index) {
-                    return buffer.item;
+                    return currentNode.item;
                 }
-                buffer = buffer.next;
+                currentNode = currentNode.next;
             }
         }
         throw new NoSuchElementException();
@@ -28,12 +28,12 @@ public class MyLinkedList<T> implements List<T> {
     public void add(T value) {
         if (size == 0) {
             currentNode = new Node<>(null, value, null);
-            head = currentNode;
-            tail = currentNode;
+            firstNode = currentNode;
+            lastNode = currentNode;
         } else {
-            currentNode = new Node<>(tail, value, null);
+            currentNode = new Node<>(lastNode, value, null);
             currentNode.prev.next = currentNode;
-            tail = currentNode;
+            lastNode = currentNode;
         }
         size++;
     }
@@ -42,14 +42,14 @@ public class MyLinkedList<T> implements List<T> {
     public void add(T value, int index) {
         if (indexOutOfBounds(index)) {
             if (index == 0) {
-                currentNode = new Node<>(null, value, head);
-                head = currentNode;
+                currentNode = new Node<>(null, value, firstNode);
+                firstNode = currentNode;
             }
             if (index == size() - 1) {
-                currentNode = new Node<>(tail, value, null);
-                tail = currentNode;
+                currentNode = new Node<>(lastNode, value, null);
+                lastNode = currentNode;
             }
-            buffer = head;
+            buffer = firstNode;
             for (int i = 1; i < size - 1; i++) {
                 if (i == index) {
                     currentNode = new Node<>(buffer.prev, value, buffer.next);
@@ -63,9 +63,13 @@ public class MyLinkedList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        MyLinkedList<T> temp = new MyLinkedList<>();
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+            temp.add(list.get(i));
         }
+        lastNode.next = temp.firstNode;
+        lastNode = temp.lastNode;
+        size = size + temp.size();
     }
 
     @Override
@@ -73,16 +77,16 @@ public class MyLinkedList<T> implements List<T> {
         if (indexOutOfBounds(index)) {
             size--;
             if (index == 0) {
-                head = head.next;
-                head.next.prev = null;
-                return head.item;
+                firstNode = firstNode.next;
+                firstNode.next.prev = null;
+                return firstNode.item;
             }
             if (index == (size())) {
-                tail = tail.prev;
-                tail.prev.next = null;
-                return tail.item;
+                lastNode = lastNode.prev;
+                lastNode.prev.next = null;
+                return lastNode.item;
             }
-            buffer = head;
+            buffer = firstNode;
             for (int i = 0; i < size(); i++) {
                 if (i == index) {
                     buffer.next.prev = buffer.prev;
@@ -97,7 +101,7 @@ public class MyLinkedList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        buffer = head;
+        buffer = firstNode;
         for (int i = 0; i < size(); i++) {
             if (buffer.item.equals(t)) {
                 remove(i);
@@ -110,7 +114,7 @@ public class MyLinkedList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        buffer = head;
+        buffer = firstNode;
         for (int i = 0; i < size - 1; i++) {
             if (i == index) {
                 buffer.item = value;
